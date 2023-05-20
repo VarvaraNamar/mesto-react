@@ -4,15 +4,19 @@ class Api {
     this._headers = options.headers;
   }
 
-  async getUserInfo() {
-    const res = await fetch(`${this._url}/users/me`, {
-      method: 'GET',
-      headers: this._headers,
-    });
-    if (!res.ok) {
-      return await Promise.reject(`Ошибка: ${res.status}`);
+  _checkResponse(res) {
+    if (res.ok) {
+      return res.json()
     }
-    return res.json();
+    return Promise.reject(`Ошибка: ${res.status}`)
+  }
+
+  async getUserInfo() {
+    const res = await fetch(this._url + '/users/me', {
+      method: 'GET',
+      headers: this._headers
+    });
+    return this._checkResponse(res);
   }//загрузка инфы о пользователе
 
   async getInitialCards() {
@@ -20,10 +24,7 @@ class Api {
       method: 'GET',
       headers: this._headers,
     });
-    if (!res.ok) {
-      return await Promise.reject(`Ошибка: ${res.status}`);
-    }
-    return res.json();
+    return this._checkResponse(res);
   }//загрузка данных карточек
 
   async setUserInfoApi(userData) {
@@ -35,10 +36,7 @@ class Api {
         about: userData.about
       })
     });
-    if (!res.ok) {
-      return await Promise.reject(`Ошибка: ${res.status}`);
-    }
-    return res.json();
+    return this._checkResponse(res);
   }//редактирование профиля
 
   async setUserAvatarApi(userData) {
@@ -49,10 +47,7 @@ class Api {
         avatar: userData.avatar
       })
     });
-    if (!res.ok) {
-      return await Promise.reject(`Ошибка: ${res.status}`);
-    }
-    return res.json();
+    return this._checkResponse(res);
   }//новый аватар
 
   async addNewCard(newData, isUser) {
@@ -65,10 +60,7 @@ class Api {
         isUser: isUser,
       })
     });
-    if (!res.ok) {
-      return await Promise.reject(`Ошибка: ${res.status}`);
-    }
-    return res.json();
+    return this._checkResponse(res);
   }//добавление новой карточки
 
   async setLikeCard(cardId) {
@@ -76,10 +68,7 @@ class Api {
       method: 'PUT',
       headers: this._headers,
     });
-    if (!res.ok) {
-      return await Promise.reject(`Ошибка: ${res.status}`);
-    }
-    return res.json();
+    return this._checkResponse(res);
   }//лайк карточки
 
   async removeLikeCard(cardId) {
@@ -87,10 +76,7 @@ class Api {
       method: 'DELETE',
       headers: this._headers,
     });
-    if (!res.ok) {
-      return await Promise.reject(`Ошибка: ${res.status}`);
-    }
-    return res.json();
+    return this._checkResponse(res);
   }//снятие лайка
 
   async deleteCard(cardId) {
@@ -98,10 +84,7 @@ class Api {
       method: 'DELETE',
       headers: this._headers,
     });
-    if (!res.ok) {
-      return await Promise.reject(`Ошибка: ${res.status}`);
-    }
-    return res.json();
+    return this._checkResponse(res);
   }//удаление карточки
 
   getStartData() {
