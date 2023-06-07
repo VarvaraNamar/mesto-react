@@ -79,6 +79,10 @@ class Api {
     return this._checkResponse(res);
   }//снятие лайка
 
+  changeLikeCardStatus(cardId, isLiked) {
+		return isLiked ? this.setLikeCard(cardId) : this.removeLikeCard(cardId)
+	};
+
   async deleteCard(cardId) {
     const res = await fetch(`${this._url}/cards/${cardId}`, {
       method: 'DELETE',

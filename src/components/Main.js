@@ -1,25 +1,10 @@
 import React from 'react';
-import api from '../utils/Api';
 import Card from './Card'
+import CurrentUserContext from '../contexts/CurrentUserContext';
 
-function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) {
-  const [userName, setUserName] = React.useState('');
-  const [userDescription, setUserDescription] = React.useState('');
-  const [userAvatar, setUserAvatar] = React.useState('');
-  const [cards, setCards] = React.useState([]);
-
-  React.useEffect(() => {
-    api
-      .getStartData()
-      .then(([userData, cards]) => {
-        setUserName(userData.name);
-        setUserDescription(userData.about);
-        setUserAvatar(userData.avatar);
-        setCards(cards);
-      })
-      .catch(err => console.log(err));
-  }, []);
-
+function Main({ cards, onEditProfile, onAddPlace, onEditAvatar, onCardClick, onCardLike, onCardDelete }) {
+  const currentUser = React.useContext(CurrentUserContext)
+  
   return (
     <main className="main-content">
       <section className="profile">
@@ -32,12 +17,12 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) {
           >
             <div
               className="profile__avatar"
-              style={{ backgroundImage: `url(${userAvatar})` }}
+              style={{ backgroundImage: `url(${currentUser.avatar})` }}
             ></div>
           </button>
           <div className="profile__info">
             <div className="profile__edit-bio">
-              <h1 className="profile__name">{userName}</h1>
+              <h1 className="profile__name">{currentUser.name}</h1>
               <button
                 onClick={onEditProfile}
                 className="profile__edit-button"
@@ -45,7 +30,7 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) {
                 type="button"
               />
             </div>
-            <p className="profile__caption">{userDescription}</p>
+            <p className="profile__caption">{currentUser.about}</p>
           </div>
         </div>
         <button
@@ -63,6 +48,8 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) {
             title={card.name}
             likes={card.likes.length}
             onCardClick={onCardClick}
+            onCardLike={onCardLike}
+            onCardDelete={onCardDelete}
           />
         ))}
       </section>
